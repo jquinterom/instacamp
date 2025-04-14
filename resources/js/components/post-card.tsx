@@ -1,4 +1,4 @@
-import { getMinutesOrSecondsAgo } from '@/lib/utils';
+import { getMinutesSecondsHoursOrDaysAgo } from '@/lib/utils';
 import { PostType } from '@/types/PostType';
 import { Link } from '@inertiajs/react';
 import { Avatar } from '@radix-ui/react-avatar';
@@ -9,7 +9,7 @@ interface PostCardProps {
 }
 
 const PostCard = ({ post }: PostCardProps) => {
-    const minutesAgo = getMinutesOrSecondsAgo(new Date(post.created_at ?? Date.now()));
+    const minutesAgo = getMinutesSecondsHoursOrDaysAgo(new Date(post.created_at ?? Date.now()));
 
     return (
         <div className="w-full rounded-sm border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -43,7 +43,7 @@ const PostCard = ({ post }: PostCardProps) => {
                         <span>{`View all ${post.comments.length} comments`}</span>
                     </Link>
 
-                    <span>{`${minutesAgo} minutes ago`}</span>
+                    <span>{minutesAgo} </span>
                 </div>
             </div>
         </div>
