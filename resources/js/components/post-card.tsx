@@ -22,7 +22,7 @@ const PostCard = ({ post }: PostCardProps) => {
 
                 <span className="font-semibold">{post.user.username}</span>
             </div>
-            <img src={`/storage/${post.image_path}`} alt="Post image" className="w-full object-cover" />
+            <img src={`/storage/${post.image_path}`} alt="Post image" className="max-h-96 min-h-96 w-full object-cover" />
             <div className="flex w-full flex-col gap-4 p-4 text-sm">
                 <div className="flex flex-col space-y-2">
                     <div className="flex w-full items-center space-x-2">
