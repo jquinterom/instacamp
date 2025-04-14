@@ -1,5 +1,5 @@
 import { User } from '.';
-import { CommentType } from './CommentType';
+import { CommentWithUser } from './CommentType';
 import { LikesType } from './Likes';
 
 export interface PostType {
@@ -9,7 +9,7 @@ export interface PostType {
     user_id: string;
     id?: number;
     user: User;
-    comments: CommentType[];
+    comments: CommentWithUser[];
     created_at: string | null;
     likes: LikesType[] | null;
 }

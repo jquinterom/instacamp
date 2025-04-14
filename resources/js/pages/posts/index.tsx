@@ -11,7 +11,7 @@ export default function Dashboard({ posts }: DashboardProps) {
     return (
         <AppLayout>
             <Head title="posts" />
-            <div className="container mx-auto max-w-xl space-y-4 py-4">{posts?.map((post) => <PostCard key={post.id} post={post} />)}</div>
+            <div className="mx-auto max-w-xl space-y-4 py-4">{posts?.map((post) => <PostCard key={post.id} post={post} />)}</div>
         </AppLayout>
     );
 }

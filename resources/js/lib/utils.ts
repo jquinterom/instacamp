@@ -25,3 +25,14 @@ export function getMinutesSecondsHoursOrDaysAgo(date: Date | null) {
     }
     return `${Math.floor(secondsAgo)} seconds ago`;
 }
+
+export function formatDate(date?: Date) {
+    if (!date) {
+        return '';
+    }
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+}

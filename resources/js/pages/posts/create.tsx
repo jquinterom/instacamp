@@ -36,7 +36,7 @@ const PostComponent = () => {
     };
 
     return (
-        <div className="container mx-auto mt-4 max-w-xl rounded-md border border-gray-300 text-sm dark:border-gray-700 dark:bg-gray-800">
+        <div className="mx-auto mt-4 w-full max-w-xl rounded-md border border-gray-300 text-sm dark:border-gray-700 dark:bg-gray-800">
             <div className="bg-accent rounded-t-md px-2 py-1.5">
                 <Label>Create New Post</Label>
             </div>
