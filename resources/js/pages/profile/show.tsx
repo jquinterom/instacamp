@@ -9,8 +9,6 @@ interface ProfileProps {
 }
 
 const Profile = ({ user }: ProfileProps) => {
-    console.log('user', user);
-
     return (
         <AppLayout>
             <div className="mx-auto mt-4 rounded-md text-sm dark:border-gray-700">
@@ -19,7 +17,7 @@ const Profile = ({ user }: ProfileProps) => {
                     <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
                             <span className="text-2xl font-bold"> {user.username} </span>
-                            <Link href="/settings/profile" method="get" as="button" className="cursor-pointer text-sm text-gray-600">
+                            <Link href="/settings/profile" method="get" className="cursor-pointer text-sm text-gray-600">
                                 <Button className="text-sm text-gray-600" variant={'outline'}>
                                     Edit Profile
                                 </Button>
@@ -39,7 +37,7 @@ const Profile = ({ user }: ProfileProps) => {
 
                 <div className="mt-4 grid grid-cols-1 items-center justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3">
                     {user.posts.map((post) => (
-                        <Link href={`/posts/${post.id}`} method="get" as="button" className="cursor-pointer">
+                        <Link key={post.id} href={`/posts/${post.id}`} method="get" as="button" className="cursor-pointer">
                             <img src={`/storage/${post.image_path}`} alt={post.caption} className="h-72 w-72 rounded-md object-cover" />
                         </Link>
                     ))}

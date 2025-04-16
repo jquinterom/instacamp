@@ -32,7 +32,7 @@ Route::patch("/posts/{post}", [PostController::class, "update"])->name("post.upd
 Route::delete("/posts/{post}", [PostController::class, "destroy"])->name("post.destroy");
 
 // Profile
-Route::get("/profile/{user}", [ProfileController::class, "index"])->name("profile.user.show");
+Route::get("/profile/{user}", [ProfileController::class, "show"])->name("profile.user.show");
 Route::get("/profile/{user}/edit", [ProfileController::class, "edit"])->name("profile.user.edit");
 Route::patch("/profile/{user}", [ProfileController::class, "update"])->name("profile.user.update");
 

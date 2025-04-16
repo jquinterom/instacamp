@@ -5,7 +5,6 @@ import { LikesType } from './Likes';
 export interface PostType {
     caption: string;
     image_path: string;
-    image_url: string;
     user_id: string;
     id?: number;
     user: User;

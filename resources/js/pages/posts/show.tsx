@@ -1,10 +1,11 @@
 import InputButton from '@/components/input-button';
+import PostDropDownOptionsComponent from '@/components/post-dropdown-options';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { formatDate } from '@/lib/utils';
 import { PostType } from '@/types/PostType';
-import { EllipsisVertical, HeartIcon, X } from 'lucide-react';
+import { HeartIcon, X } from 'lucide-react';
 
 interface PostDetailsProps {
     post: PostType;
@@ -23,7 +24,8 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                             <img src={`/storage/${post.user.profile_image}`} alt="Profile image" className="h-6 w-6 rounded-full object-cover" />
                             <span className="text-sm font-semibold">{post.user.username}</span>
                         </div>
-                        <EllipsisVertical className="h-5 w-5 dark:text-gray-400" />
+
+                        <PostDropDownOptionsComponent post={post} />
                     </div>
                     <div className="flex gap-2">
                         <span className="text-sm font-semibold">{post.user.name}</span>

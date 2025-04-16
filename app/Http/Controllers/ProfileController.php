@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProfileController extends Controller
 {
-  public function index($user)
+  public function show($user)
   {
     $user = User::findOrFail($user)->with(["posts", "likes", "comments"])->first();
 
     return inertia::render(
-      component: 'profile/index',
+      component: 'profile/show',
       props: ['user' => $user],
     );
   }
@@ -24,7 +24,6 @@ class ProfileController extends Controller
   public function edit(User $user)
   {
     if (auth()->id() !== $user->id) {
-      // abort(403, "Unauthorized action.");
       return Redirect::back()->with('error', 'Unauthorized action.');
     }
 

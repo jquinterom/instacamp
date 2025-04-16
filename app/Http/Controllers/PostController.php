@@ -72,13 +72,13 @@ class PostController extends Controller
   public function edit(Post $post)
   {
     if (auth()->id() !== $post->user_id) {
-      // abort(403, 'Unauthorized action.');
       return Redirect::back()->with('error', 'Unauthorized action.');
     }
 
-    // return view('post.edit', compact('post'));
-    return Inertia::render('posts/edit', [
-      'post' => $post->load("user")
+    $post = $post->load("user");
+
+    return Inertia::render('posts/create', [
+      'postToEdit' => $post,
     ]);
   }
 
@@ -88,17 +88,26 @@ class PostController extends Controller
   public function update(Request $request, Post $post)
   {
     if (auth()->id() !== $post->user_id) {
-      // abort(403, 'Unauthorized action.');
       return Redirect::back()->with('error', 'Unauthorized action.');
     }
 
     $data = $request->validate([
       'caption' => 'required',
+      'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
+
+    if ($request->hasFile("image")) {
+      if ($request->user()->profile_image) {
+        Storage::disk("public")->delete($post->image_path);
+      }
+
+      $imagePath = $request->file('image')->store('uploads', 'public');
+      $data['image_path'] = $imagePath;
+    }
 
     $post->update($data);
 
-    return redirect('/posts/' . $post->id);
+    return to_route('post.show', ["post" => $post]);
   }
 
   /**
@@ -107,7 +116,6 @@ class PostController extends Controller
   public function destroy(Post $post)
   {
     if (auth()->id() !== $post->user_id) {
-      // abort(403, 'Unauthorized action.');
       return Redirect::back()->with('error', 'Unauthorized action.');
     }
 
@@ -115,6 +123,6 @@ class PostController extends Controller
 
     $post->delete();
 
-    return redirect('/profile/' . auth()->user()->id);
+    return to_route('profile.user.show', auth()->user()->id);
   }
 }
