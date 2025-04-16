@@ -1,15 +1,27 @@
-import { getMinutesSecondsHoursOrDaysAgo } from '@/lib/utils';
+import { useHandlePostLikes } from '@/hooks/use-handle-post-likes';
+import { cn, getMinutesSecondsHoursOrDaysAgo } from '@/lib/utils';
+import { SharedData } from '@/types';
 import { PostType } from '@/types/PostType';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Avatar } from '@radix-ui/react-avatar';
 import { Heart, MessageCircle } from 'lucide-react';
 
 interface PostCardProps {
     post: PostType;
+    handleSaveLike: (postId: number) => void;
+    handleDeleteLike: (postId: number) => void;
 }
 
-const PostCard = ({ post }: PostCardProps) => {
+const postHasLikesClass = (someLikeByUser: boolean | undefined) => {
+    return cn(`h-5 w-5`, `${someLikeByUser ? 'fill-red-500 text-red-500 hover:text-red-600' : 'text-blue-700 hover:text-blue-600'}`);
+};
+
+const PostCard = ({ post, handleSaveLike, handleDeleteLike }: PostCardProps) => {
     const minutesAgo = getMinutesSecondsHoursOrDaysAgo(new Date(post.created_at ?? Date.now()));
+    const page = usePage<SharedData>();
+    const { auth } = page.props;
+
+    const { handleClickLike, someLikeByUser, likesCount } = useHandlePostLikes({ post, handleSaveLike, handleDeleteLike, userId: auth.user.id });
 
     return (
         <div className="w-full rounded-sm border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -26,11 +38,11 @@ const PostCard = ({ post }: PostCardProps) => {
             <div className="flex w-full flex-col gap-4 p-4 text-sm">
                 <div className="flex flex-col space-y-2">
                     <div className="flex w-full items-center space-x-2">
-                        <Heart className="h-5 w-5 text-blue-700 hover:text-blue-600 dark:border-blue-400 dark:text-blue-400 dark:hover:text-blue-500" />
-                        <MessageCircle className="h-5 w-5 text-blue-700 hover:text-blue-600 dark:border-blue-400 dark:text-blue-400 dark:hover:text-blue-500" />
+                        <Heart className={postHasLikesClass(someLikeByUser)} onClick={handleClickLike} />
+                        <MessageCircle className="h-5 w-5 text-blue-700 hover:text-blue-600" />
                     </div>
 
-                    <span className="font-semibold">{`${post.likes?.length ?? 0} likes`}</span>
+                    <span className="font-semibold">{`${likesCount} likes`}</span>
                 </div>
 
                 <div className="flex w-full items-center space-x-2">
@@ -43,7 +55,7 @@ const PostCard = ({ post }: PostCardProps) => {
                         <span>{`View all ${post.comments.length} comments`}</span>
                     </Link>
 
-                    <span>{minutesAgo} </span>
+                    <span>{minutesAgo}</span>
                 </div>
             </div>
         </div>

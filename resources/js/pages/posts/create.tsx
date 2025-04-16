@@ -20,8 +20,15 @@ const PostComponent = () => {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('posts.store'), {
-            onFinish: () => reset('caption'),
+
+        post(route('post.store'), {
+            preserveState: true,
+            preserveScroll: true,
+            // onFinish: () => reset('caption'),
+            onFinish: () => reset(),
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
         });
     };
 
@@ -62,7 +69,13 @@ const PostComponent = () => {
                     </div>
 
                     <div className="flex items-start gap-4">
-                        <Button type="submit" className="rounded-md bg-blue-700 dark:bg-blue-400" tabIndex={2} disabled={processing}>
+                        <Button
+                            type="submit"
+                            className="border border-blue-500 px-2 text-blue-500 shadow-none hover:bg-blue-500 hover:text-white"
+                            tabIndex={2}
+                            disabled={processing}
+                            variant={'outline'}
+                        >
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             Create
                         </Button>

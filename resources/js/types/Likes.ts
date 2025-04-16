@@ -1,4 +1,4 @@
 export interface LikesType {
-    user_id: string;
-    post_id: string;
+    user_id: string | number;
+    post_id: string | number;
 }

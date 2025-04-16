@@ -6,25 +6,20 @@ use App\Models\Post;
 
 class LikeController extends Controller
 {
-  public function __construct()
-  {
-    $this->middleware("auth");
-  }
-
   public function store(Post $post)
   {
-    $post->likes()->create([
+    $post->likes()->firstOrCreate([
       "user_id" => auth()->id(),
     ]);
 
-    return back();
+    return response()->json(['message' => 'Like registered!']);
   }
 
   public function destroy(Post $post)
   {
     $post->likes()->where("user_id", auth()->id())->delete();
 
-    return back();
+    return back()->with('success', 'Like deleted!');
   }
 
 }

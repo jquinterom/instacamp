@@ -14,7 +14,6 @@ return new class extends Migration {
       $table->id();
       $table->string('caption', 256)->nullable(false);
       $table->string('image_path', 256)->nullable(false);
-      $table->string('image_url', 256)->nullable(false);
 
       $table->foreignId('user_id')
         ->constrained('users')
