@@ -7,7 +7,7 @@ interface InputButtonProps {
     classNameContainer?: string;
     placeholder?: string;
     handleSetComment?: (comment: string) => void;
-    onClick?: (comment: string) => void;
+    onClick?: () => void;
     isLoading?: boolean;
 }
 
@@ -16,7 +16,8 @@ const InputButton = ({ classNameContainer, placeholder, handleSetComment, onClic
 
     const handleClick = () => {
         if (onClick) {
-            onClick(comment);
+            onClick();
+            setComment('');
         }
     };
 

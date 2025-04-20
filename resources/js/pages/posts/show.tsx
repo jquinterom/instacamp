@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { formatDate } from '@/lib/utils';
 import { SharedData } from '@/types';
+import { CommentWithUser } from '@/types/CommentType';
 import { PostType } from '@/types/PostType';
 import { useForm, usePage } from '@inertiajs/react';
 import { HeartIcon, X } from 'lucide-react';
@@ -27,6 +28,7 @@ const PostDetails = ({ post }: PostDetailsProps) => {
         post: handlePost,
         processing,
         reset,
+        delete: handleDelete,
     } = useForm<Required<CommentForm>>({
         comment: '',
     });
@@ -35,13 +37,21 @@ const PostDetails = ({ post }: PostDetailsProps) => {
         setData('comment', comment);
     };
 
-    const handlePostComment = (comment: string) => {
-        setData('comment', comment);
-
+    const handlePostComment = () => {
         handlePost(route('comments.store', { post: post }), {
             preserveState: true,
             preserveScroll: true,
             onFinish: () => reset(),
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+        });
+    };
+
+    const handleDeleteComment = (comment: CommentWithUser) => {
+        handleDelete(route('comments.destroy', { comment }), {
+            preserveState: true,
+            preserveScroll: true,
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
             },
@@ -93,6 +103,7 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                                     variant={'ghost'}
                                     size={'sm'}
                                     className="focus-visible:ring-none hover:bg-white focus-visible:border-none hover:dark:bg-gray-950"
+                                    onClick={() => handleDeleteComment(comment)}
                                 >
                                     <X className="h-4 w-4 text-red-700" />
                                 </Button>
