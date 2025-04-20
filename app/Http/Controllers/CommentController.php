@@ -8,10 +8,6 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-  public function __construct()
-  {
-    $this->middleware("auth");
-  }
 
   public function store(Request $request, Post $post)
   {
@@ -24,7 +20,7 @@ class CommentController extends Controller
       "user_id" => auth()->id(),
     ]);
 
-    return redirect()->route("/posts/" . $post->id);
+    return to_route('post.show', $post);
   }
 
   public function destroy(Comment $comment)
@@ -36,6 +32,7 @@ class CommentController extends Controller
     $postId = $comment->post_id;
     $comment->delete();
 
-    return redirect()->route("/posts/" . $postId);
+    // return redirect()->route("/posts/" . $postId);
+    return to_route("post.show", $postId);
   }
 }

@@ -1,13 +1,32 @@
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
 interface InputButtonProps {
     classNameContainer?: string;
     placeholder?: string;
+    handleSetComment?: (comment: string) => void;
+    onClick?: (comment: string) => void;
+    isLoading?: boolean;
 }
 
-const InputButton = ({ classNameContainer, placeholder, ...props }: InputButtonProps) => {
+const InputButton = ({ classNameContainer, placeholder, handleSetComment, onClick, isLoading, ...props }: InputButtonProps) => {
+    const [comment, setComment] = useState<string>('');
+
+    const handleClick = () => {
+        if (onClick) {
+            onClick(comment);
+        }
+    };
+
+    const handleOnValueChange = (comment: string) => {
+        setComment(comment);
+        if (handleSetComment) {
+            handleSetComment(comment);
+        }
+    };
+
     return (
         <div
             className={cn(
@@ -21,11 +40,20 @@ const InputButton = ({ classNameContainer, placeholder, ...props }: InputButtonP
                 }
                 {...props}
                 placeholder={placeholder}
+                value={comment}
+                onChange={(e) => handleOnValueChange(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        handleClick();
+                    }
+                }}
             />
             <Button
                 variant={'outline'}
                 className="h-8 rounded-s-none border border-blue-500 px-2 text-blue-500 shadow-none hover:bg-blue-500 hover:text-white"
                 size={'sm'}
+                onClick={handleClick}
+                disabled={isLoading}
             >
                 Post
             </Button>

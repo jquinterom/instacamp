@@ -1,17 +1,15 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-  Route::get('dashboard', function () {
-    return Inertia::render('dashboard');
-  })->name('dashboard');
+  Route::get('dashboard', [DashboardController::class, "index"])->name('dashboard');
 });
 
 require __DIR__ . '/settings.php';

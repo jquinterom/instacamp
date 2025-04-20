@@ -4,28 +4,66 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { formatDate } from '@/lib/utils';
+import { SharedData } from '@/types';
 import { PostType } from '@/types/PostType';
+import { useForm, usePage } from '@inertiajs/react';
 import { HeartIcon, X } from 'lucide-react';
 
 interface PostDetailsProps {
     post: PostType;
 }
 
+interface CommentForm {
+    comment: string;
+}
+
 const PostDetails = ({ post }: PostDetailsProps) => {
     const postDate = new Date(post.created_at || Date.now());
+    const page = usePage<SharedData>();
+    const { auth } = page.props;
+
+    const {
+        setData,
+        post: handlePost,
+        processing,
+        reset,
+    } = useForm<Required<CommentForm>>({
+        comment: '',
+    });
+
+    const handleSetComment = (comment: string) => {
+        setData('comment', comment);
+    };
+
+    const handlePostComment = (comment: string) => {
+        setData('comment', comment);
+
+        handlePost(route('comments.store', { post: post }), {
+            preserveState: true,
+            preserveScroll: true,
+            onFinish: () => reset(),
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+        });
+    };
 
     return (
         <AppLayout>
-            <div className="mx-auto flex w-full py-4 text-sm">
-                <img src={`/storage/${post.image_path}`} alt={post.caption} className="h-96 w-2/3 object-cover" />
-                <div className="flex w-full flex-col gap-4 p-4">
+            <div className="mx-auto flex w-full items-center justify-center py-4 text-sm">
+                <img
+                    src={`/storage/${post.image_path}`}
+                    alt={post.caption}
+                    className="h-96 w-2/3 max-w-xl bg-gray-100 object-contain dark:bg-gray-900"
+                />
+                <div className="flex w-full flex-col gap-4 p-4 lg:w-lg">
                     <div className="flex w-full items-center justify-between">
                         <div className="flex items-center gap-2">
                             <img src={`/storage/${post.user.profile_image}`} alt="Profile image" className="h-6 w-6 rounded-full object-cover" />
                             <span className="text-sm font-semibold">{post.user.username}</span>
                         </div>
 
-                        <PostDropDownOptionsComponent post={post} />
+                        {auth.user.id === post.user.id && <PostDropDownOptionsComponent post={post} />}
                     </div>
                     <div className="flex gap-2">
                         <span className="text-sm font-semibold">{post.user.name}</span>
@@ -65,7 +103,13 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                     <div className="h-px bg-gray-300 dark:bg-gray-700" />
 
                     <div className="w-full">
-                        <InputButton classNameContainer="w-full" placeholder="Write a comment" />
+                        <InputButton
+                            classNameContainer="w-full"
+                            placeholder="Write a comment"
+                            onClick={handlePostComment}
+                            isLoading={processing}
+                            handleSetComment={handleSetComment}
+                        />
                     </div>
                 </div>
             </div>

@@ -29,7 +29,6 @@ const PostComponent = ({ postToEdit }: PostCreateProps) => {
         post(route('post.store'), {
             preserveState: true,
             preserveScroll: true,
-            // onFinish: () => reset('caption'),
             onFinish: () => reset(),
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
