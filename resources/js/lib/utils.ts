@@ -36,3 +36,10 @@ export function formatDate(date?: Date) {
         day: 'numeric',
     });
 }
+
+export function updateCsrfToken(token: string) {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    if (meta) {
+        meta.setAttribute('content', token);
+    }
+}

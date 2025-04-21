@@ -2,13 +2,14 @@ import InputButton from '@/components/input-button';
 import PostDropDownOptionsComponent from '@/components/post-dropdown-options';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { postHasLikesClass, useHandlePostLikes } from '@/hooks/use-handle-post-likes';
 import AppLayout from '@/layouts/app-layout';
 import { formatDate } from '@/lib/utils';
 import { SharedData } from '@/types';
 import { CommentWithUser } from '@/types/CommentType';
 import { PostType } from '@/types/PostType';
 import { useForm, usePage } from '@inertiajs/react';
-import { HeartIcon, X } from 'lucide-react';
+import { Heart, X } from 'lucide-react';
 
 interface PostDetailsProps {
     post: PostType;
@@ -22,6 +23,8 @@ const PostDetails = ({ post }: PostDetailsProps) => {
     const postDate = new Date(post.created_at || Date.now());
     const page = usePage<SharedData>();
     const { auth } = page.props;
+
+    const { handleClickLike, someLikeByUser, likesCount } = useHandlePostLikes({ post, userId: auth.user.id });
 
     const {
         setData,
@@ -83,9 +86,9 @@ const PostDetails = ({ post }: PostDetailsProps) => {
                     <div className="h-px bg-gray-300 dark:bg-gray-700" />
 
                     <div>
-                        <HeartIcon className="h-5 w-5 text-blue-700" />
+                        <Heart className={postHasLikesClass(someLikeByUser)} onClick={handleClickLike} />
                         <div></div>
-                        <Label>{post.likes?.length || 0} likes</Label>
+                        <Label>{likesCount || 0} likes</Label>
                     </div>
 
                     <span className="text-gray-500">{formatDate(new Date(postDate))}</span>

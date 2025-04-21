@@ -21,7 +21,7 @@ class PostController extends Controller
 
     return Inertia::render(
       component: 'posts/index',
-      props: ['posts' => $posts]
+      props: ['posts' => $posts, "csrf_token" => csrf_token()]
     );
   }
 
@@ -59,7 +59,7 @@ class PostController extends Controller
    */
   public function show(Post $post)
   {
-    $post = $post->load(["user", "comments.user"]);
+    $post = $post->load(["user", "comments.user", "likes"]);
 
     return Inertia::render('posts/show', [
       'post' => $post,

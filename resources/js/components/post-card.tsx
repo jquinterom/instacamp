@@ -1,5 +1,5 @@
-import { useHandlePostLikes } from '@/hooks/use-handle-post-likes';
-import { cn, getMinutesSecondsHoursOrDaysAgo } from '@/lib/utils';
+import { postHasLikesClass, useHandlePostLikes } from '@/hooks/use-handle-post-likes';
+import { getMinutesSecondsHoursOrDaysAgo } from '@/lib/utils';
 import { SharedData } from '@/types';
 import { PostType } from '@/types/PostType';
 import { Link, usePage } from '@inertiajs/react';
@@ -8,24 +8,18 @@ import { Heart, MessageCircle } from 'lucide-react';
 
 interface PostCardProps {
     post: PostType;
-    handleSaveLike: (postId: number) => void;
-    handleDeleteLike: (postId: number) => void;
 }
 
-const postHasLikesClass = (someLikeByUser: boolean | undefined) => {
-    return cn(`h-5 w-5`, `${someLikeByUser ? 'fill-red-500 text-red-500 hover:text-red-600' : 'text-blue-700 hover:text-blue-600'}`);
-};
-
-const PostCard = ({ post, handleSaveLike, handleDeleteLike }: PostCardProps) => {
+const PostCard = ({ post }: PostCardProps) => {
     const minutesAgo = getMinutesSecondsHoursOrDaysAgo(new Date(post.created_at ?? Date.now()));
     const page = usePage<SharedData>();
     const { auth } = page.props;
 
-    const { handleClickLike, someLikeByUser, likesCount } = useHandlePostLikes({ post, handleSaveLike, handleDeleteLike, userId: auth.user.id });
+    const { handleClickLike, someLikeByUser, likesCount } = useHandlePostLikes({ post, userId: auth.user.id });
 
     return (
         <div className="w-full rounded-sm border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <div className="bg-accent flex w-full items-center space-x-2 px-2 py-1">
+            <div className="bg-accent flex w-full items-center space-x-2 rounded-sm px-2 py-1">
                 {post.user.profile_image?.length ? (
                     <img src={`/storage/${post.user.profile_image}`} alt="User profile image" className="h-6 w-6 rounded-full" />
                 ) : (
@@ -34,7 +28,9 @@ const PostCard = ({ post, handleSaveLike, handleDeleteLike }: PostCardProps) => 
 
                 <span className="font-semibold">{post.user.username}</span>
             </div>
+
             <img src={`/storage/${post.image_path}`} alt="Post image" className="max-h-96 min-h-96 w-full object-cover" />
+
             <div className="flex w-full flex-col gap-4 p-4 text-sm">
                 <div className="flex flex-col space-y-2">
                     <div className="flex w-full items-center space-x-2">

@@ -1,4 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
+import { updateCsrfToken } from '@/lib/utils';
 import { NavItem, type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { PostType } from '../types/PostType';
@@ -27,9 +28,12 @@ const profile: NavItem = {
 
 interface DashboardProps {
     posts: PostType[];
+    csrf_token: string;
 }
 
-export default function Dashboard({ posts }: DashboardProps) {
+export default function Dashboard({ posts, csrf_token }: DashboardProps) {
+    updateCsrfToken(csrf_token);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs} feed={feed} newPost={newPost} profile={profile}>
             <Head title="Dashboard" />

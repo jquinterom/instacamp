@@ -13,7 +13,7 @@ class DashboardController extends Controller
 
     return Inertia::render(
       component: 'posts/index',
-      props: ['posts' => $posts]
+      props: ['posts' => $posts, "csrf_token" => csrf_token()]
     );
 
   }
